@@ -1,19 +1,26 @@
 import UIKit
+import FirebaseCore
 import UserNotifications
 import os.log
+import GoogleSignIn
 
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
+        FirebaseApp.configure()
+
         // UNUserNotificationCenterのデリゲートを自身に設定します。
         // これにより、通知に関するイベント（フォアグラウンドでの受信など）をこのクラスで一元管理できます。
         UNUserNotificationCenter.current().delegate = self
         
         // ユーザーに通知の許可を要求します。
         requestNotificationAuthorization()
-        
         return true // 起動処理が成功したことを示します。
+    }
+    
+    func application(_ application: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey: Any]) -> Bool {
+        return GIDSignIn.sharedInstance.handle(url)
     }
 
     /// ユーザーに通知の許可を要求します。

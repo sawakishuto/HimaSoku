@@ -13,26 +13,39 @@ struct ContentView: View {
     ]
 
     var body: some View {
-        VStack(spacing: 40) {
-            Text("今から遊べる友達")
-                .fontWeight(.bold)
-            ScrollView {
-                ForEach(goSignMembers, id: \.name) { user in
-                    Text(user.name)
-                        .font(.headline)
-                        .padding()
-                        .frame(width: 300, height: 60)
-                        .background(Color.gray.opacity(0.2))
-                        .cornerRadius(15)
-                        .clipped()
+        ZStack {
+            LinearGradient(gradient: Gradient(colors: [.orange, .orange.opacity(0.3)]), startPoint: .top, endPoint: .bottom)
+                .opacity(0.6)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+            VStack(spacing: 40) {
+                Text("暇な友達")
+                    .fontWeight(.bold)
+                    .font(.title2)
+                
+                ScrollView {
+                    ForEach(goSignMembers, id: \.id) { user in
+                        Text(user.name)
+                            .font(.headline)
+                            .padding()
+                            .frame(width: 300, height: 60)
+                            .background(Color.gray.opacity(0.2))
+                            .cornerRadius(15)
+                            .clipped()
+                    }
                 }
             }
-        }
-        .ignoresSafeArea()
-        .padding()
-        .onAppear {
-            // 画面が最初に表示された時にも値を読み込む
-        }
+            .offset(y: 10)
+            .padding(.vertical, 30)
+            .padding(.horizontal, 30)
+            .background(Color.white)
+            .cornerRadius(15)
+            .frame(width: 350, height: 600)
+            .shadow(radius: 10)
+            .ignoresSafeArea()
+            .onAppear {
+                // 画面が最初に表示された時にも値を読み込む
+            }
+        }.ignoresSafeArea()
     }
 }
 
