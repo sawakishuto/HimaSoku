@@ -6,3 +6,8 @@
 //
 
 import Foundation
+
+struct Group: Codable, Identifiable {
+    let id: String
+    var name: String
+}

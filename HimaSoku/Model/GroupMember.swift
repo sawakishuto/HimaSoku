@@ -6,3 +6,8 @@
 //
 
 import Foundation
+
+struct GroupMember: Codable {
+    let group: Group
+    let users: [User]
+}
