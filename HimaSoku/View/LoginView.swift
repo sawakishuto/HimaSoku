@@ -9,15 +9,18 @@ import SwiftUI
 import FirebaseCore
 import FirebaseAuth
 import GoogleSignIn
+import Alamofire
+import KeyChainAccess
 
 
 struct LoginView: View {
     @State var name: String = ""
     @State var password: String = ""
     @State var isLogined: Bool = false
+    @State var user: User? = nil
     var body: some View {
         if isLogined {
-            HimaTabView()
+            HimaTabView(user: user!)
         } else {
             ZStack {
                 LinearGradient(gradient: Gradient(colors: [.orange, .orange.opacity(0.3)]), startPoint: .top, endPoint: .bottom)
@@ -48,6 +51,7 @@ struct LoginView: View {
                 
             }
             .ignoresSafeArea()
+            .environment(\.user, self.user ?? User(id: "", name: ""))
         }
 
     }
@@ -81,16 +85,47 @@ extension LoginView {
            }
        }
        
-       private func login(credential: AuthCredential) {
+    private func login(credential: AuthCredential) {
            Auth.auth().signIn(with: credential) { (authResult, error) in
                if let error = error {
                    print("SignInError: \(error.localizedDescription)")
                    return
                }
-               print(authResult?.user.uid)
-               print(authResult?.user.displayName)
-               authResult?.user.getIDToken { (idToken, error) in
-                   print(idToken)
+               guard let firebase_uid = authResult?.user.uid, let name = authResult?.user.displayName else {
+                   return
+               }
+               
+               self.user = User(id: firebase_uid, name: name)
+               print(self.user)
+               
+               let params = ["firebase_uid": firebase_uid, "name": name, "email": authResult!.user.email! ]
+               
+               Task {
+                   do {
+                       let status = try await APIClient.shared.postData(path: "/users", params: params)
+                       
+                       switch status {
+                       case .success:
+                           print("ユーザー情報保存成功")
+                       case .failure:
+                           self.isLogined = false
+                           return
+                       }
+                       
+                       guard let device_token = UserDefaults.standard.string(forKey: "device_token") else { return }
+                       
+                       let result = try await APIClient.shared.postDeviceToken(path: "/devices", uid: firebase_uid, deviceId: device_token)
+                       switch result {
+                       case .success:
+                           self.isLogined = true
+                           return
+                       case .failure:
+                           self.isLogined = false
+                           return
+                       }
+                   } catch {
+                       print(error.localizedDescription)
+                   }
                }
            }
        }

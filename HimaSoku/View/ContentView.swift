@@ -5,11 +5,9 @@ import SwiftUI
 struct ContentView: View {
     // UserDefaultsに保存された値を監視するためのState
     @State private var lastMemo: String = ""
+    @Environment(\.user) var user
+
     var goSignMembers: [User] = [
-        User(name: "井上"),
-        User(name: "佐藤"),
-        User(name: "鈴木"),
-        User(name: "田中")
     ]
 
     var body: some View {
@@ -24,7 +22,7 @@ struct ContentView: View {
                 
                 ScrollView {
                     ForEach(goSignMembers, id: \.id) { user in
-                        Text(user.name)
+                        Text(user.name ?? "名前の取得に失敗しました")
                             .font(.headline)
                             .padding()
                             .frame(width: 300, height: 60)
@@ -33,6 +31,8 @@ struct ContentView: View {
                             .clipped()
                     }
                 }
+                .frame(width: 300, height: 500)
+
             }
             .offset(y: 10)
             .padding(.vertical, 30)
@@ -45,7 +45,30 @@ struct ContentView: View {
             .onAppear {
                 // 画面が最初に表示された時にも値を読み込む
             }
-        }.ignoresSafeArea()
+        }
+        .onAppear {
+            let groupId = UserDefaults.standard.string(forKey: "group_id")
+            if groupId != nil {
+                return
+            }
+            let params = ["name": "友達", "group_id": "1"]
+            Task {
+                do {
+                    let result = try await APIClient.shared.postData(path: "/groups", params: params)
+                    switch result {
+                    case .success:
+                        UserDefaults.standard.set("1", forKey: "group_id")
+                        return
+                    case .failure:
+                        return
+                    }
+
+                } catch {
+                    
+                }
+            }
+        }
+        .ignoresSafeArea()
     }
 }
 
