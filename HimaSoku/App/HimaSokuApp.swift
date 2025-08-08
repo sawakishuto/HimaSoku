@@ -15,3 +15,6 @@ struct HimaSokuApp: App {
         }
     }
 }
+extension EnvironmentValues {
+    @Entry var user: User  = User(id: "0", name: "john Doe")
+}

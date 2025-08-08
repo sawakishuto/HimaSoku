@@ -55,6 +55,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Data型のデバイストークンを16進数の文字列に変換します。
         let token = deviceToken.map { String(format: "%02.2hhx", $0) }.joined()
         os_log("Device Token: %@", log: .default, type: .info, token)
+        UserDefaults.standard.set(token, forKey: "device_token")
+
         // ここで、取得したデバイストークンを自社のサーバーに送信する処理を実装します。
     }
 
