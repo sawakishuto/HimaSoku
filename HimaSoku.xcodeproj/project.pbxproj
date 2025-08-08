@@ -6,6 +6,15 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		4B6C3CC62E45EE8C0083475C /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 4B6C3CC52E45EE8C0083475C /* FirebaseAuth */; };
+		4B6C3CC82E45EE8C0083475C /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = 4B6C3CC72E45EE8C0083475C /* FirebaseCore */; };
+		4B6C3CCB2E45EF600083475C /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 4B6C3CCA2E45EF600083475C /* GoogleSignIn */; };
+		4B6C3CCD2E45F73C0083475C /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 4B6C3CCC2E45F73C0083475C /* FirebaseMessaging */; };
+		4B6C3CE12E4601330083475C /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 4B6C3CE02E4601330083475C /* Alamofire */; };
+		4B6C3CE42E46429A0083475C /* KeychainAccess in Frameworks */ = {isa = PBXBuildFile; productRef = 4B6C3CE32E46429A0083475C /* KeychainAccess */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		4B6C3C962E450A220083475C /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -65,6 +74,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4B6C3CE12E4601330083475C /* Alamofire in Frameworks */,
+				4B6C3CCD2E45F73C0083475C /* FirebaseMessaging in Frameworks */,
+				4B6C3CE42E46429A0083475C /* KeychainAccess in Frameworks */,
+				4B6C3CC82E45EE8C0083475C /* FirebaseCore in Frameworks */,
+				4B6C3CC62E45EE8C0083475C /* FirebaseAuth in Frameworks */,
+				4B6C3CCB2E45EF600083475C /* GoogleSignIn in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -125,6 +140,12 @@
 			);
 			name = HimaSoku;
 			packageProductDependencies = (
+				4B6C3CC52E45EE8C0083475C /* FirebaseAuth */,
+				4B6C3CC72E45EE8C0083475C /* FirebaseCore */,
+				4B6C3CCA2E45EF600083475C /* GoogleSignIn */,
+				4B6C3CCC2E45F73C0083475C /* FirebaseMessaging */,
+				4B6C3CE02E4601330083475C /* Alamofire */,
+				4B6C3CE32E46429A0083475C /* KeychainAccess */,
 			);
 			productName = HimaSoku;
 			productReference = 4B6C3C842E450A200083475C /* HimaSoku.app */;
@@ -208,6 +229,12 @@
 			);
 			mainGroup = 4B6C3C7B2E450A200083475C;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				4B6C3CC42E45EE8C0083475C /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				4B6C3CC92E45EF600083475C /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
+				4B6C3CDF2E4601330083475C /* XCRemoteSwiftPackageReference "Alamofire" */,
+				4B6C3CE22E46429A0083475C /* XCRemoteSwiftPackageReference "KeychainAccess" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 4B6C3C852E450A200083475C /* Products */;
 			projectDirPath = "";
@@ -606,6 +633,74 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		4B6C3CC42E45EE8C0083475C /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 12.1.0;
+			};
+		};
+		4B6C3CC92E45EF600083475C /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/google/GoogleSignIn-iOS";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 9.0.0;
+			};
+		};
+		4B6C3CDF2E4601330083475C /* XCRemoteSwiftPackageReference "Alamofire" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Alamofire/Alamofire";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.10.2;
+			};
+		};
+		4B6C3CE22E46429A0083475C /* XCRemoteSwiftPackageReference "KeychainAccess" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/kishikawakatsumi/KeychainAccess";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		4B6C3CC52E45EE8C0083475C /* FirebaseAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4B6C3CC42E45EE8C0083475C /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAuth;
+		};
+		4B6C3CC72E45EE8C0083475C /* FirebaseCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4B6C3CC42E45EE8C0083475C /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCore;
+		};
+		4B6C3CCA2E45EF600083475C /* GoogleSignIn */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4B6C3CC92E45EF600083475C /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
+			productName = GoogleSignIn;
+		};
+		4B6C3CCC2E45F73C0083475C /* FirebaseMessaging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4B6C3CC42E45EE8C0083475C /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseMessaging;
+		};
+		4B6C3CE02E4601330083475C /* Alamofire */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4B6C3CDF2E4601330083475C /* XCRemoteSwiftPackageReference "Alamofire" */;
+			productName = Alamofire;
+		};
+		4B6C3CE32E46429A0083475C /* KeychainAccess */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4B6C3CE22E46429A0083475C /* XCRemoteSwiftPackageReference "KeychainAccess" */;
+			productName = KeychainAccess;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 4B6C3C7C2E450A200083475C /* Project object */;
 }
