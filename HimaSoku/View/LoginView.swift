@@ -10,7 +10,7 @@ import FirebaseCore
 import FirebaseAuth
 import GoogleSignIn
 import Alamofire
-import KeyChainAccess
+import KeychainAccess
 
 
 struct LoginView: View {
@@ -96,36 +96,40 @@ extension LoginView {
                }
                
                self.user = User(id: firebase_uid, name: name)
-               print(self.user)
-               
-               let params = ["firebase_uid": firebase_uid, "name": name, "email": authResult!.user.email! ]
-               
-               Task {
-                   do {
-                       let status = try await APIClient.shared.postData(path: "/users", params: params)
-                       
-                       switch status {
-                       case .success:
-                           print("ユーザー情報保存成功")
-                       case .failure:
-                           self.isLogined = false
-                           return
+               if let user = user {
+                   KeychainManager.shared.save(key: KeychainKey.user_name.rawValue, stringData: user.name)
+                   KeychainManager.shared.save(key: KeychainKey.user_id.rawValue, stringData: user.id)
+                   
+                   let params = ["firebase_uid": user.id, "name": user.name, "email": authResult!.user.email! ]
+                   
+                   Task {
+                       do {
+                           let status = try await APIClient.shared.postData(path: "/users", params: params)
+                           
+                           switch status {
+                           case .success:
+                               print("ユーザー情報保存成功")
+                           case .failure:
+                               self.isLogined = false
+                               return
+                           }
+                           
+                           guard let device_token = UserDefaults.standard.string(forKey: "device_token") else { return }
+                           
+                           let result = try await APIClient.shared.postDeviceToken(path: "/devices", uid: firebase_uid, deviceId: device_token)
+                           switch result {
+                           case .success:
+                               self.isLogined = true
+                               return
+                           case .failure:
+                               self.isLogined = false
+                               return
+                           }
+                       } catch {
+                           print(error.localizedDescription)
                        }
-                       
-                       guard let device_token = UserDefaults.standard.string(forKey: "device_token") else { return }
-                       
-                       let result = try await APIClient.shared.postDeviceToken(path: "/devices", uid: firebase_uid, deviceId: device_token)
-                       switch result {
-                       case .success:
-                           self.isLogined = true
-                           return
-                       case .failure:
-                           self.isLogined = false
-                           return
-                       }
-                   } catch {
-                       print(error.localizedDescription)
                    }
+
                }
            }
        }
