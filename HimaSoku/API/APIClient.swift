@@ -26,7 +26,7 @@ enum APIError: Error, LocalizedError {
 final class APIClient {
 
     static let shared = APIClient()
-    private let baseURL = "http://127.0.0.1:3000" // baseURLのほうが一般的
+    private let baseURL = "https://himasoku-234324210193.asia-northeast1.run.app" // baseURLのほうが一般的
 
     private init() {}
 
@@ -139,8 +139,13 @@ final class APIClient {
         guard let user = Auth.auth().currentUser else {
             throw APIError.authenticationError
         }
+        
+        let token = try await user.getIDToken()
         // user.getIDToken()は元々async throwsに対応している
-        return try await user.getIDToken()
+        // tokenを入れ直している
+        KeychainManager.shared.deleteToken(key: KeychainKey.userAuthToken.rawValue)
+        KeychainManager.shared.save(key: KeychainKey.userAuthToken.rawValue, stringData: token)
+        return token
     }
 
     /// Alamofireのエラーを独自のAPIErrorにマッピングする
@@ -164,4 +169,51 @@ final class APIClient {
         }
         return .unknown(statusCode: nil)
     }
+    
+    func sendJoinAction(
+            firebaseUID: String,
+            actionIdentifier: String,
+            groupId: String,
+            senderName: String,
+            senderFirebaseUID: String,
+            durationTime: String?
+        ) {
+            guard let url = URL(string: "\(baseURL)/notifications/response") else { return }
+            
+            var request = URLRequest(url: url)
+            request.httpMethod = "POST"
+            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            
+            // Firebase IDトークンを取得してAuthorizationヘッダーに設定
+            Auth.auth().currentUser?.getIDToken { [weak self] token, error in
+                guard let token = token else { return }
+                request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+                
+                let parameters: [String: Any] = [
+                    "firebase_uid": firebaseUID,
+                    "action_identifier": actionIdentifier,
+                    "group_id": groupId,
+                    "sender_name": senderName,
+                    "sender_firebase_uid": senderFirebaseUID,
+                    "duration_time": durationTime ?? ""
+                ]
+                
+                do {
+                    request.httpBody = try JSONSerialization.data(withJSONObject: parameters)
+                    
+                    URLSession.shared.dataTask(with: request) { data, response, error in
+                        // レスポンス処理
+                        if let error = error {
+                            print("Error: \(error)")
+                            return
+                        }
+                        
+                        print("Join action sent successfully")
+                    }.resume()
+                    
+                } catch {
+                    print("JSON serialization error: \(error)")
+                }
+            }
+        }
 }
