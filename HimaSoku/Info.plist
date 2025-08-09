@@ -19,5 +19,9 @@
 	<string>"通知のために利用します"</string>
 	<key>REVERSED_CLIENT_ID</key>
 	<string>com.googleusercontent.apps.5896672016-u6hiln018fhh8nsrog8t8uk81gpf9ibk</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>remote-notification</string>
+	</array>
 </dict>
 </plist>
