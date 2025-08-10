@@ -17,6 +17,7 @@ struct HimaSokuIntent: AppIntent {
     // このメソッドの中に、テキストを受け取った後の処理を記述します
     func perform() async throws -> some IntentResult & ProvidesDialog {
         // タイトル、本文、サウンド設定の保持
+    
         
         // ユーザが暇な時間を入力したらその情報をもとに自分のグループに所属している人全員に通知を送るAPIを叩く
         guard let user = KeychainManager.shared.getUser() else {
@@ -34,6 +35,7 @@ struct HimaSokuIntent: AppIntent {
                switch result {
                case .success:
                    // 成功したので、成功ダイアログの結果を返す
+                   UserDefaults.standard.removeObject(forKey: "Empathies")
                    return .result(dialog: "HimaSokuを実行しました。")
                    
                case .failure(let error): // エラーも具体的に扱うとデバッグしやすくなります
@@ -46,49 +48,5 @@ struct HimaSokuIntent: AppIntent {
                print("Request Error: \(error)") // エラー内容をログに出力
                return .result(dialog: "HimaSokuが失敗しました、もう一度お試しください")
            }
-        
-        
-//        
-//        let likeActionIcon = UNNotificationActionIcon(systemImageName: "lasso")
-//        let likeAction = UNNotificationAction(identifier: "like-action",
-//                                                   title: "わかる😀",
-//                                                 options: [],
-//                                                    icon: likeActionIcon)
-//                
-//        let commentActionIcon = UNNotificationActionIcon(templateImageName: "text.bubble")
-//        let commentAction = UNTextInputNotificationAction(identifier: "comment-action",
-//                                                               title: "スルーで！🙇‍♂️",
-//                                                             options: [],
-//                                                                icon: commentActionIcon,
-//                                                textInputButtonTitle: "Post",
-//                                                textInputPlaceholder: "Type here…")
-//
-//        let category = UNNotificationCategory(identifier: "update-actions",
-//                                                 actions: [likeAction, commentAction],
-//                                       intentIdentifiers: [], options: [])
-//
-//        
-//        let content = UNMutableNotificationContent()
-//        content.title = "HimaSoku"
-//        content.subtitle = "\(durationTime)"
-//        content.body = "〇〇さんが暇みたいです"
-//        content.sound = UNNotificationSound.default
-//        content.categoryIdentifier = "update-actions"
-//
-//        // seconds後に起動するトリガーを保持
-//        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 3,
-//                                                        repeats: false)
-//        // 識別子とともに通知の表示内容とトリガーをrequestに内包する
-//        let request = UNNotificationRequest(identifier: "Timer",
-//                                            content: content,
-//                                            trigger: trigger)
-//
-//        // UNUserNotificationCenterにrequest
-//        UNUserNotificationCenter.current().setNotificationCategories([category])
-//        UNUserNotificationCenter.current().add(request) { (error) in
-//            if let error = error {
-//                print(error.localizedDescription)
-//            }
-//        }
     }
 }
