@@ -71,13 +71,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         let joinAction = UNNotificationAction(
             identifier: "JOIN_ACTION",
             title: "わかる~😮",
-            options: [.foreground] // アプリを前面に表示
+            options: [] // アプリを前面に表示
         )
         
         let declineAction = UNNotificationAction(
             identifier: "DECLINE_ACTION",
             title: "一旦スルーで！",
-            options: []
+            options: [.destructive]
         )
         
         // カテゴリの定義
@@ -98,6 +98,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
                                 withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
         completionHandler([.banner, .list, .sound, .badge])
     }
+    
+
     func application(_ application: UIApplication,
                        didReceiveRemoteNotification userInfo: [AnyHashable : Any],
                      fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
@@ -112,10 +114,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
             completionHandler(.newData)
         } else {
             // user_nameがペイロードに含まれていなかった場合
+            saveUserName("名無しさんだよお")
             completionHandler(.noData)
         }
         
     }
+
     private func saveUserName(_ newName: String) {
             let defaults = UserDefaults.standard
             
@@ -130,9 +134,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
             defaults.set(currentNames, forKey: "Empathies")
         }
     
-    
-    
-
     /// ユーザーが通知（バナーや通知センターの項目）を操作したときに呼び出されます。
     func userNotificationCenter(_ center: UNUserNotificationCenter,
                                 didReceive response: UNNotificationResponse,
