@@ -15,15 +15,21 @@ struct HimaTabView: View {
         TabView {
             ContentView()
                 .tabItem {
-                    Image(systemName: "1.circle.fill")
+                    Image(systemName: "flag.circle") // SFSymbolsのアイコン
+                    Text("暇の集い")
                 }
+
+            
                 .environment(\.user, user)
             
             GroupMembersView()
                 .tabItem {
-                    Image(systemName: "2.circle.fill")
+                    Image(systemName: "person.2.circle") // SFSymbolsのアイコン
+                    Text("グループ")
                 }
-                .environment(\.user, user)
+
+
+
         }
     }
 }
