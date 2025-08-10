@@ -5,9 +5,8 @@ import SwiftUI
 struct ContentView: View {
     // UserDefaultsに保存された値を監視するためのState
     @Environment(\.user) var user
-
-    var goSignMembers: [User] = [
-    ]
+    @State var names: [String] = []
+    @State var empacyMembers: [User] = [User(id: UUID().uuidString, name: "みんな忙しいみたい！")]
 
     var body: some View {
         ZStack {
@@ -18,10 +17,10 @@ struct ContentView: View {
                 Text("暇な友達")
                     .fontWeight(.bold)
                     .font(.title2)
-                
+
                 ScrollView {
-                    ForEach(goSignMembers, id: \.id) { user in
-                        Text(user.name ?? "名前の取得に失敗しました")
+                    ForEach(empacyMembers, id: \.id) { user in
+                        Text(user.name)
                             .font(.headline)
                             .padding()
                             .frame(width: 300, height: 60)
@@ -39,6 +38,7 @@ struct ContentView: View {
             .background(Color.white)
             .cornerRadius(15)
             .frame(width: 350, height: 600)
+            .frame(maxHeight:600)
             .shadow(radius: 10)
             .ignoresSafeArea()
             .onAppear {
@@ -46,6 +46,16 @@ struct ContentView: View {
             }
         }
         .onAppear {
+            self.names = UserDefaults.standard.stringArray(forKey: "Empathies") ?? []
+            if !names.isEmpty {
+                let empathiesUsers = names.map { name in
+                    User(id: UUID().uuidString, name: name)
+                }
+                self.empacyMembers = empathiesUsers
+            } else {
+                self.empacyMembers.append(User(id: UUID().uuidString, name: "未設定"))
+            }
+            
             let groupId = UserDefaults.standard.string(forKey: "group_id")
             if groupId != nil {
                 return
@@ -66,7 +76,6 @@ struct ContentView: View {
                     
                 }
             }
-            let Empathies = UserDefaults.standard.array(forKey: "Empathies") as? [String] ?? ["みんなひまじゃないのかなあ"]
         }
         .ignoresSafeArea()
     }
