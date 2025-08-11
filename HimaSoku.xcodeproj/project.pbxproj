@@ -32,6 +32,19 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		4B5C16B52E48ECE10044189C /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		4B6C3C842E450A200083475C /* HimaSoku.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HimaSoku.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B6C3C952E450A220083475C /* HimaSokuTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HimaSokuTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -130,6 +143,7 @@
 				4B6C3C802E450A200083475C /* Sources */,
 				4B6C3C812E450A200083475C /* Frameworks */,
 				4B6C3C822E450A200083475C /* Resources */,
+				4B5C16B52E48ECE10044189C /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
