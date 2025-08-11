@@ -18,8 +18,6 @@ struct HimaTabView: View {
                     Image(systemName: "flag.circle") // SFSymbolsのアイコン
                     Text("暇の集い")
                 }
-
-            
                 .environment(\.user, user)
             
             GroupMembersView()
@@ -27,9 +25,7 @@ struct HimaTabView: View {
                     Image(systemName: "person.2.circle") // SFSymbolsのアイコン
                     Text("グループ")
                 }
-
-
-
+                .environment(\.user, user)
         }
     }
 }

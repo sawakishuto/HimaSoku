@@ -52,8 +52,6 @@ struct ContentView: View {
                     User(id: UUID().uuidString, name: name)
                 }
                 self.empacyMembers = empathiesUsers
-            } else {
-                self.empacyMembers.append(User(id: UUID().uuidString, name: "未設定"))
             }
             
             let groupId = UserDefaults.standard.string(forKey: "group_id")
