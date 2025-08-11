@@ -170,7 +170,7 @@ final class APIClient {
         return .unknown(statusCode: nil)
     }
     
-    func sendJoinAction(
+    func sendAction(
             firebaseUID: String,
             actionIdentifier: String,
             groupId: String,
@@ -188,14 +188,15 @@ final class APIClient {
             Auth.auth().currentUser?.getIDToken { [weak self] token, error in
                 guard let token = token else { return }
                 request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-                
+                let device_token = UserDefaults.standard.string(forKey: "device_token") ?? ""
                 let parameters: [String: Any] = [
                     "firebase_uid": firebaseUID,
                     "action_identifier": actionIdentifier,
                     "group_id": groupId,
                     "sender_name": senderName,
                     "sender_firebase_uid": senderFirebaseUID,
-                    "duration_time": durationTime ?? ""
+                    "duration_time": durationTime ?? "",
+                    "device_token": device_token
                 ]
                 
                 do {
