@@ -27,6 +27,8 @@ struct HimaTabView: View {
                 }
                 .environment(\.user, user)
         }
+        .ignoresSafeArea()
+
     }
 }
 #Preview {
