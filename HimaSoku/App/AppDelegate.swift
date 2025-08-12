@@ -261,162 +261,78 @@ private func saveUserName(_ newName: String) {
     logger.info("✅ [saveUserName] 保存が完了しました。")
 }
 
-     
-
         /// ユーザーが通知（バナーや通知センターの項目）を操作したときに呼び出されます。
-
         func userNotificationCenter(_ center: UNUserNotificationCenter,
-
                                     didReceive response: UNNotificationResponse,
-
                                     withCompletionHandler completionHandler: @escaping () -> Void) {
-
-
-
             logger.info("➡️ [didReceive response] ユーザーが通知を操作しました。")
-
             let userInfo = response.notification.request.content.userInfo
-
             let actionIdentifier = response.actionIdentifier
-
-            
-
             logger.info("  [didReceive response] Action Identifier: \(actionIdentifier)")
-
             logger.debug("  [didReceive response] User Info: \(userInfo)")
-
-            
-
             // カスタムデータを取得
-
             let senderFirebaseUID = userInfo["sender_firebase_uid"] as? String
-
             let senderName = userInfo["sender_name"] as? String
-
             let groupId = userInfo["group_id"] as? String
-
             let durationTime = userInfo["durationTime"] as? String
-
             
-
             switch actionIdentifier {
-
             case "JOIN_ACTION":
-
                 logger.info("    [didReceive response] 'JOIN_ACTION' が選択されました。")
-
                 handleJoinAction(
-
                     senderFirebaseUID: senderFirebaseUID!,
-
                     senderName: senderName!,
-
                     groupId: groupId!,
-
                     durationTime: durationTime!
-
                 )
-
             case "DECLINE_ACTION":
-
                 logger.info("    [didReceive response] 'DECLINE_ACTION' が選択されました。")
-
                 handleDeclineAction(
-
                     senderFirebaseUID: senderFirebaseUID!,
-
                     senderName: senderName!,
-
                     groupId: groupId!,
-
                     durationTime: durationTime!
-
                 )
-
             default:
-
                 logger.info("    [didReceive response] デフォルトのアクション（通知タップ）が選択されました。")
-
                 break
-
             }
-
-
-
             if let notificationId = userInfo["notification_id"] as? String {
-
                 logger.info("  [didReceive response] アクション済みフラグを立てます (ID: \(notificationId))。")
-
                 UserDefaults.standard.set(true, forKey: notificationId)
-
             } else {
-
                 logger.warning("  [didReceive response] アクション済みフラグを立てようとしましたが、'notification_id'が見つかりませんでした。")
-
             }
-
-            
-
             completionHandler()
-
             logger.info("✅ [didReceive response] 通知操作のハンドリングを完了しました。")
-
         }
   func handleJoinAction(senderFirebaseUID: String, senderName: String, groupId: String, durationTime: String) {
-
         logger.info("➡️ [handleJoinAction] 参加APIの送信処理を開始します。")
-
         let user = KeychainManager.shared.getUser()
-
         if let user = user {
-
             do {
-
                 try APIClient.shared.sendAction(firebaseUID: user.id, actionIdentifier: "JOIN_ACTION", groupId: groupId, senderName: senderName, senderFirebaseUID: senderFirebaseUID, durationTime: "0")
-
                 logger.info("✅ [handleJoinAction] 参加APIの送信に成功しました。")
-
             } catch {
-
                 logger.error("🚨 [handleJoinAction] 参加APIの送信に失敗しました: \(error.localizedDescription)")
-
             }
-
         } else {
-
             logger.warning("🚨 [handleJoinAction] ユーザー情報が取得できなかったため、APIを送信できませんでした。")
-
         }
-
     }
 
-    
-
     func handleDeclineAction(senderFirebaseUID: String, senderName: String, groupId: String, durationTime: String) {
-
         logger.info("➡️ [handleDeclineAction] 辞退APIの送信処理を開始します。")
-
         let user = KeychainManager.shared.getUser()
-
         if let user = user {
-
             do {
-
                 try APIClient.shared.sendAction(firebaseUID: user.id, actionIdentifier: "DECLINE_ACTION", groupId: groupId, senderName: senderName, senderFirebaseUID: senderFirebaseUID, durationTime: "0")
-
                 logger.info("✅ [handleDeclineAction] 辞退APIの送信に成功しました。")
-
             } catch {
-
                 logger.error("🚨 [handleDeclineAction] 辞退APIの送信に失敗しました: \(error.localizedDescription)")
-
             }
-
         } else {
-
             logger.warning("🚨 [handleDeclineAction] ユーザー情報が取得できなかったため、APIを送信できませんでした。")
-
         }
-
     }
 }
