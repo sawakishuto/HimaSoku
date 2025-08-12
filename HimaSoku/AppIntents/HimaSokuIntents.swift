@@ -25,6 +25,7 @@ struct HimaSokuIntent: AppIntent {
            }
            
         let params = ["firebase_uid": user.id, "name": user.name, "durationTime": durationTime]
+        let groupId = UserDefaults.standard.string(forKey: "group_id")
         
            do {
                // 関数自体がasyncなので、ここでTaskを起動する必要はありません。
