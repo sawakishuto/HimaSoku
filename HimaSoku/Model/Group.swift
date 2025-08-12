@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Group: Codable, Identifiable {
+struct Group: Codable, Identifiable, Equatable {
     let id: String
     var name: String
 }

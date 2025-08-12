@@ -6,3 +6,7 @@
 //
 
 import Foundation
+
+struct Groups: Codable, Equatable {
+    let groups: [Group]
+}
