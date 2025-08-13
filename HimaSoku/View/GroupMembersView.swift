@@ -13,6 +13,8 @@ struct GroupMembersView: View {
     @State var isPresented: Bool = false
     @State var groupId: String = ""
     @State var groups: [Group] = []
+    @State var currentGroup: Group = Group(id: "1", name: "未設定")
+    @EnvironmentObject var appState: AppState
     @Environment(\.user) var user
     var body: some View {
         ZStack {
@@ -36,8 +38,10 @@ struct GroupMembersView: View {
                     Task {
                         // ここに非同期処理を書く
                         do {
+                            UserDefaults.standard.set(newValue, forKey: "groupId")
                             let groupMember = try await fetchGroupMember(groupId: newValue)
                             self.groupMember = groupMember
+                            self.appState.currentGroup = groupMember.group
                         } catch {
                             print("Failed to fetch group members for new group ID \(newValue): \(error)")
                         }
@@ -54,6 +58,7 @@ struct GroupMembersView: View {
                             .background(Color.gray.opacity(0.2))
                             .cornerRadius(15)
                             .clipped()
+                            .shadow(radius: 10)
                     }
                 }
                 .frame(width: 300, height: 500)
@@ -66,6 +71,8 @@ struct GroupMembersView: View {
             .cornerRadius(15)
             .frame(width: 350, height: 600)
             .shadow(radius: 10)
+            .environment(\.group, currentGroup)
+            
             Button {
                 self.isPresented = true
             } label: {
@@ -143,16 +150,20 @@ struct GroupMembersView: View {
         }
         .onAppear {
             Task {
-                let groupId = UserDefaults.standard.string(forKey: "groupId") ?? "1"
+                if appState.currentGroup.id == "1" {
+                    self.groupId = UserDefaults.standard.string(forKey: "groupId") ?? "1"
+                } else {
+                    print("\(appState.currentGroup)")
+                    self.groupId = appState.currentGroup.id
+                }
                 do {
                     let groups: Groups = try await APIClient.shared.fetchData(path: "/users/\(user.id)/groups")
                     self.groups = groups.groups
                     if groups.groups == [] {
                         return
-                    } else {
-                        self.groupId = groups.groups.first!.id
-                        let groupMember: GroupMember = try await APIClient.shared.fetchData(path: "/groups/\(groupId)/users")
                         
+                    } else {
+                        let groupMember: GroupMember = try await APIClient.shared.fetchData(path: "/groups/\(groupId)/users")
                         self.groupMember = groupMember
                     }
 

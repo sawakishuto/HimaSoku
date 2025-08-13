@@ -4,7 +4,6 @@ import SwiftUI
 
 struct ContentView: View {
     // UserDefaultsに保存された値を監視するためのState
-    @Environment(\.user) var user
     @State var names: [String] = []
     @State var empacyMembers: [User] = [
         User(id: UUID().uuidString, name: "みんな忙しいみたい！")
@@ -13,6 +12,9 @@ struct ContentView: View {
     @State var groupName: String = ""
     @State var isPresentedId: Bool = false
     @State var groupId: String = ""
+    @State var currentGroup: Group = Group(id: "1", name: "未設定")
+    @EnvironmentObject var appState: AppState
+    @Environment(\.user) var user
 
     var body: some View {
         ZStack {
@@ -27,7 +29,7 @@ struct ContentView: View {
                 Spacer()
                 
                 VStack(spacing: 40) {
-                    Text("暇な友達")
+                    Text("\(currentGroup.name)" + "の暇な友達")
                         .fontWeight(.bold)
                         .font(.title2)
                     
@@ -40,6 +42,7 @@ struct ContentView: View {
                                 .background(Color.gray.opacity(0.2))
                                 .cornerRadius(15)
                                 .clipped()
+                                .shadow(radius: 10)
                         }
                     }
                     .frame(width: 300, height: 500)
@@ -158,9 +161,14 @@ struct ContentView: View {
                 self.empacyMembers = empathiesUsers
             }
 
-            let groupId = UserDefaults.standard.string(forKey: "group_id")
-            if groupId != nil {
-                return
+            Task {
+                do {
+                    if appState.currentGroup.id != "1" {
+                        self.currentGroup = try await APIClient.shared.fetchData(path: "/groups/\(appState.currentGroup.id)")
+                    } else {
+                        print("1です")
+                    }
+                }
             }
         }
         .ignoresSafeArea()

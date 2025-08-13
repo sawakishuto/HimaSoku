@@ -10,6 +10,7 @@ import SwiftUI
 struct HimaTabView: View {
     @State var user: User = User(id: "", name: "")
     @Environment(\.user) var currentUser
+    @Environment(\.group) var group
 
     var body: some View {
         TabView {
