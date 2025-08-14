@@ -11,7 +11,7 @@ struct GroupMembersView: View {
     @State var groupMember: GroupMember? = nil
     @State var isAlertPresented: Bool = false
     @State var isPresented: Bool = false
-    @State var groupId: String = ""
+    @State var groupId: String = "1"
     @State var groups: [Group] = []
     @State var currentGroup: Group = Group(id: "1", name: "未設定")
     @EnvironmentObject var appState: AppState
@@ -114,7 +114,7 @@ struct GroupMembersView: View {
                                 let result = try await APIClient.shared.postData(path: "/users_groups", params: params)
                                 switch result {
                                 case .success:
-                                    Task{
+                                    Task {
                                        let groupMember = try await  fetchGroupMember(groupId: self.groupId)
                                         self.groupMember = groupMember
                                         self.isAlertPresented.toggle()
@@ -150,19 +150,22 @@ struct GroupMembersView: View {
         }
         .onAppear {
             Task {
-                if appState.currentGroup.id == "1" {
-                    self.groupId = UserDefaults.standard.string(forKey: "groupId") ?? "1"
-                } else {
+                if appState.currentGroup.id != "1"  {
                     print("\(appState.currentGroup)")
                     self.groupId = appState.currentGroup.id
                 }
                 do {
                     let groups: Groups = try await APIClient.shared.fetchData(path: "/users/\(user.id)/groups")
                     self.groups = groups.groups
+        
                     if groups.groups == [] {
+                        print("とれなかった")
                         return
                         
                     } else {
+                        if self.groupId == "1" {
+                            self.groupId = self.groups.first!.id
+                        }
                         let groupMember: GroupMember = try await APIClient.shared.fetchData(path: "/groups/\(groupId)/users")
                         self.groupMember = groupMember
                     }

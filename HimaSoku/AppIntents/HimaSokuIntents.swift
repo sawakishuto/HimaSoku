@@ -13,6 +13,9 @@ struct HimaSokuIntent: AppIntent {
     @Parameter(title: "何時まで暇？？🥱")
     var durationTime: String
     
+    @Parameter(title: "どのグループに送りますか？📝")
+    var targetGroup: GroupEntity
+    
     // 実際に処理を実行するメソッド
     // このメソッドの中に、テキストを受け取った後の処理を記述します
     func perform() async throws -> some IntentResult & ProvidesDialog {
@@ -25,12 +28,12 @@ struct HimaSokuIntent: AppIntent {
            }
            
         let params = ["firebase_uid": user.id, "name": user.name, "durationTime": durationTime]
-        let groupId = UserDefaults.standard.string(forKey: "group_id")
-        
+        let groupId = targetGroup.id
+
            do {
                // 関数自体がasyncなので、ここでTaskを起動する必要はありません。
                // 直接API呼び出しを 'await' (待機) します。
-               let result = try await APIClient.shared.postData(path: "/notifications/group/1", params: params)
+               let result = try await APIClient.shared.postData(path: "/notifications/group/\(groupId)", params: params)
                
                // awaitが終わった後、APIの結果を使って分岐します。
                switch result {

@@ -10,4 +10,5 @@ import Foundation
 class AppState: ObservableObject {
     // @Publishedを付けることで、このプロパティの変更がUIに自動的に通知される
     @Published var currentGroup: Group = Group(id: "1", name: "未設定")
+    @Published var groups: [Group] = []
 }
